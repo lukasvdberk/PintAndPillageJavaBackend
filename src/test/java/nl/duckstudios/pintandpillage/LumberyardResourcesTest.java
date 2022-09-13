@@ -48,7 +48,7 @@ public class LumberyardResourcesTest {
     }
 
     @Test
-    void should_IncreaseProductionWoodProduction_WhenWhenBuild() {
+    void should_IncreaseProductionWoodProduction_WhenBuild() {
         this.setupLumberYardUnderTesting();
         // Arrange
         int expectedResourcesPerHour = 1000500;
