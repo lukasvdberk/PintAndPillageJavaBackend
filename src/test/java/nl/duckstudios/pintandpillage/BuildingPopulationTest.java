@@ -22,26 +22,17 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @Tag("BuildingPopulation")
 public class BuildingPopulationTest {
-    @Mock
-    private Village villageMock;
-
     private House houseUnderTesting;
 
     @BeforeEach
     void setupBuilding(){
-        this.villageMock = new Village();
-
         this.houseUnderTesting = new House();
-        this.houseUnderTesting.setVillage(villageMock);
         this.houseUnderTesting.setLevel(1);
         this.houseUnderTesting.setPosition(new Coord(1, 4));
         this.houseUnderTesting.updateBuilding();
         this.houseUnderTesting.setUnderConstruction(false);
     }
 
-    /**
-     * Kijken wanneer je leveled ook daadwerkelijk een grotere populatie krijgt
-     */
     @Test
     void should_IncreasePopulation_WhenHouseIsBuild() {
         // Act
@@ -66,9 +57,6 @@ public class BuildingPopulationTest {
         assertThat(expectedLevel2Population, is(expectedLevel2Population));
     }
 
-    /**
-     * Wanneer update building methode niet word aangeroepen zal de populatie ook niet omhoog moeten
-     */
     @Test
     void should_PopulationShouldNotIncrease_WhenWeDontUpdateBuilding() {
         int actualLevel1VillagePopulationCapacity = this.houseUnderTesting.getPopulationCapacity();
@@ -83,7 +71,7 @@ public class BuildingPopulationTest {
         int expectedLevel2Population = 21; // because the update building method was not called
 
         // check if correct population, and the formula works as expected
-        assertThat(expectedLevel1Population, is(expectedLevel1Population));
-        assertThat(expectedLevel2Population, is(expectedLevel2Population));
+        assertThat(actualLevel1VillagePopulationCapacity, is(expectedLevel1Population));
+        assertThat(actualLevel2VillagePopulationCapacity, is(expectedLevel2Population));
     }
 }
