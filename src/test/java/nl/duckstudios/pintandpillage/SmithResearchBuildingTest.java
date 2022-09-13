@@ -24,8 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+// Story: De smederij upgraden zodat deze research kan doen naar betere krijgers en schepen.
 @ExtendWith(MockitoExtension.class)
-@Tag("ResearchBuilding")
+@Tag("SmithResearchBuildingTest")
 public class SmithResearchBuildingTest {
     Smith smithBuildingUnderTesting;
 
