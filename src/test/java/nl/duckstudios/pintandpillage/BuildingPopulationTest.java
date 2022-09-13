@@ -82,9 +82,6 @@ public class BuildingPopulationTest {
         int expectedLevel1Population = 21;
         int expectedLevel2Population = 21; // because the update building method was not called
 
-        // when we level up a house we should have more population capacity
-        assertTrue(actualLevel2VillagePopulationCapacity > actualLevel1VillagePopulationCapacity);
-
         // check if correct population, and the formula works as expected
         assertThat(expectedLevel1Population, is(expectedLevel1Population));
         assertThat(expectedLevel2Population, is(expectedLevel2Population));
