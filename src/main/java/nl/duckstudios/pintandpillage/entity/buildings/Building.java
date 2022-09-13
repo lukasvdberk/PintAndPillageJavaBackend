@@ -24,7 +24,7 @@ import java.util.Map;
 public abstract class Building {
 
     @Transient
-    protected final ResourceManager resourceManager;
+    protected ResourceManager resourceManager;
     @Getter
     @Setter
     @Id
