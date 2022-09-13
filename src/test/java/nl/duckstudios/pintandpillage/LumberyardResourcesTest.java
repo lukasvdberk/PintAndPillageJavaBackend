@@ -51,7 +51,7 @@ public class LumberyardResourcesTest {
     void should_IncreaseProductionWoodProduction_WhenBuild() {
         this.setupLumberYardUnderTesting();
         // Arrange
-        int expectedResourcesPerHour = 1000500;
+        int expectedResourcesPerHour = 1000500; // 500 extra because that is the starting value
 
         // Act
 
@@ -71,7 +71,7 @@ public class LumberyardResourcesTest {
     void should_IncreaseProductionWoodProduction_WhenWaitingMultipleHours() {
         // Arrange
         this.setupLumberYardUnderTesting();
-        int expectedResourcesPerHour = 3000500;
+        int expectedResourcesPerHour = 3000500; // 500 extra because that is the starting value
 
         // Act
 
@@ -91,7 +91,7 @@ public class LumberyardResourcesTest {
     void should_IncreaseProductionWoodProduction_WithMultipleLumberyards() {
         // Arrange
         this.setupLumberYardUnderTesting();
-        int expectedResourcesPerHour = 9000500;
+        int expectedResourcesPerHour = 9000500; // 500 extra because that is the starting value
 
         // setup 2 more lumberyards to increase production
         Lumberyard secondLumberYard = this.setupLumberYard(new Coord(2, 2));
