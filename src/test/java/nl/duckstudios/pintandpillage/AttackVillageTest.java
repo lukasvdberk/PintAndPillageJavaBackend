@@ -35,13 +35,13 @@ public class AttackVillageTest {
         // Arrange
         VillageUnit attackingVillageUnits = new VillageUnit();
 
-        int amountAttackingUnit = 0;
+        int amountAttackingUnit = 100;
         attackingVillageUnits.setUnit(new Axe());
         attackingVillageUnits.setAmount(amountAttackingUnit);
 
         attackingVillage.add(attackingVillageUnits);
 
-        int amountDefendingUnit = 100;
+        int amountDefendingUnit = 10000;
         Village defendingVillage = new Village(); // village with no unit
         defendingVillage.addUnit(new Axe(), amountDefendingUnit); // with no units
 
