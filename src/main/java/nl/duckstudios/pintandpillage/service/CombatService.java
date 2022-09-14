@@ -40,7 +40,7 @@ public class CombatService {
     public void checkHasEnoughUnitsToAttack(List<VillageUnit> attackingUnits, Village attackingVillage) {
         for (VillageUnit attackingUnit : attackingUnits) {
             VillageUnit unitInVillage = attackingVillage.getUnitInVillage(attackingUnit.getUnit().getUnitName());
-            if (unitInVillage == null || attackingUnit.getAmount() <= 0 || attackingUnit.getAmount() < unitInVillage.getAmount()) {
+            if (unitInVillage == null || attackingUnit.getAmount() <= 0 || attackingUnit.getAmount() > unitInVillage.getAmount()) {
                 throw new AttackingConditionsNotMetException("Not enough " + attackingUnit.getUnit().getUnitName() + " to attack this village");
             }
 
