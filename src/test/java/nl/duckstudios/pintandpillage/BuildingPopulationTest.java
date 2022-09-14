@@ -35,10 +35,10 @@ public class BuildingPopulationTest {
 
     @Test
     void should_IncreasePopulation_WhenHouseIsBuild() {
-        // Act
+        // Arrange
         int actualLevel1VillagePopulationCapacity = this.houseUnderTesting.getPopulationCapacity();
 
-        // Arrange
+        // Act
         this.houseUnderTesting.setLevel(this.houseUnderTesting.getLevel() + 1); // increase level by one
         this.houseUnderTesting.updateBuilding();
         this.houseUnderTesting.setUnderConstruction(false);
@@ -64,6 +64,7 @@ public class BuildingPopulationTest {
         // Arrange
         this.houseUnderTesting.setLevel(this.houseUnderTesting.getLevel() + 1); // increase level by one
 
+        // Act
         int actualLevel2VillagePopulationCapacity = this.houseUnderTesting.getPopulationCapacity();
 
         // Assert

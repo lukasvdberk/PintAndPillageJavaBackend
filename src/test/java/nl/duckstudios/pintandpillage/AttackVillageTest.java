@@ -4,6 +4,9 @@ import nl.duckstudios.pintandpillage.Exceptions.AttackingConditionsNotMetExcepti
 import nl.duckstudios.pintandpillage.entity.Village;
 import nl.duckstudios.pintandpillage.entity.VillageUnit;
 import nl.duckstudios.pintandpillage.entity.production.*;
+import nl.duckstudios.pintandpillage.model.AttackUnitData;
+import nl.duckstudios.pintandpillage.model.AttackVillageData;
+import nl.duckstudios.pintandpillage.model.UnitType;
 import nl.duckstudios.pintandpillage.service.CombatService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -15,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.Matchers.is;
 
 // Story: Vijandige dorpen op de wereldkaart aanvallen zodat ik resources van deze dorpen kan stelen.
 @ExtendWith(MockitoExtension.class)
@@ -224,4 +229,36 @@ public class AttackVillageTest {
         assertThat(thrown).isInstanceOf(AttackingConditionsNotMetException.class)
                 .hasMessageContaining("Not enough ship capacity for this attack");
     }
+
+    @Test
+    void should_ConvertVillageUnits_WhenSupplyingVillageUnits() {
+        AttackVillageData attackVillageData = new AttackVillageData();
+        attackVillageData.toVillageId = 1;
+        attackVillageData.fromVillageId = 1;
+        attackVillageData.units = new ArrayList<>();
+        attackVillageData.units.add(new AttackUnitData(UnitType.Jarl, 100));
+        attackVillageData.units.add(new AttackUnitData(UnitType.Axe, 100));
+        attackVillageData.units.add(new AttackUnitData(UnitType.Bow, 100));
+
+        List<VillageUnit> actualAttackingVillage = this.combatService.convertToVillageUnits(attackVillageData);
+
+        int amountOfVillageUnits = 3;
+        assertEquals(actualAttackingVillage.size(), amountOfVillageUnits);
+    }
+
+    @Test
+    void should_NotConvertVillageUnits_WhenSupplyingNoUnits() {
+        AttackVillageData attackVillageData = new AttackVillageData();
+        attackVillageData.toVillageId = 1;
+        attackVillageData.fromVillageId = 1;
+        attackVillageData.units = new ArrayList<>();
+        AttackingConditionsNotMetException thrown = assertThrows(AttackingConditionsNotMetException.class,
+                () -> this.combatService.convertToVillageUnits(attackVillageData)
+        );
+
+        // Assert
+        assertThat(thrown).isInstanceOf(AttackingConditionsNotMetException.class)
+                .hasMessageContaining("To attack you need to send at least one unit");
+    }
+
 }
