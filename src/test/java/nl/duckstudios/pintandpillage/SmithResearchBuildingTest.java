@@ -4,6 +4,7 @@ import nl.duckstudios.pintandpillage.Exceptions.BuildingConditionsNotMetExceptio
 import nl.duckstudios.pintandpillage.Exceptions.ResearchConditionsNotMetException;
 import nl.duckstudios.pintandpillage.entity.Village;
 import nl.duckstudios.pintandpillage.entity.buildings.ResearchBuilding;
+import nl.duckstudios.pintandpillage.entity.buildings.ResourceBuilding;
 import nl.duckstudios.pintandpillage.entity.buildings.Smith;
 import nl.duckstudios.pintandpillage.entity.researching.Research;
 import nl.duckstudios.pintandpillage.mocks.MockedResearch;
@@ -14,14 +15,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ResourceEditor;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 // Story: De smederij upgraden zodat deze research kan doen naar betere krijgers en schepen.

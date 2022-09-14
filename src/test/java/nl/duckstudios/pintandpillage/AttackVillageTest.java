@@ -5,8 +5,6 @@ import nl.duckstudios.pintandpillage.entity.Village;
 import nl.duckstudios.pintandpillage.entity.VillageUnit;
 import nl.duckstudios.pintandpillage.entity.production.*;
 import nl.duckstudios.pintandpillage.service.CombatService;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,32 +22,32 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Tag("AttackVillageRequirementTest")
 public class AttackVillageTest {
     CombatService combatService;
-    List<VillageUnit> defendingVillage;
+    List<VillageUnit> attackingVillage;
 
     @BeforeEach
     void setupAttackingVillage() {
         this.combatService = new CombatService();
-        this.defendingVillage = new ArrayList<>();
+        this.attackingVillage = new ArrayList<>();
     }
 
     @Test
-    void should_HaveEnoughUnitsToAttack_WhenStartAnAttack() {
+    void should_HaveEnoughUnitsToDefendVillage_WhenStartAnAttack() {
         // Arrange
         VillageUnit attackingVillageUnits = new VillageUnit();
 
-        int amountAttackingUnit = 100;
+        int amountAttackingUnit = 0;
         attackingVillageUnits.setUnit(new Axe());
         attackingVillageUnits.setAmount(amountAttackingUnit);
 
-        defendingVillage.add(attackingVillageUnits);
+        attackingVillage.add(attackingVillageUnits);
 
-        int amountDefendingUnit = 0;
-        Village attackingVillage = new Village(); // village with no unit
-        attackingVillage.addUnit(new Axe(), amountDefendingUnit); // with no units
+        int amountDefendingUnit = 100;
+        Village defendingVillage = new Village(); // village with no unit
+        defendingVillage.addUnit(new Axe(), amountDefendingUnit); // with no units
 
 
         // Act
-        this.combatService.checkHasEnoughUnitsToAttack(defendingVillage, attackingVillage);
+        this.combatService.checkHasEnoughUnitsToAttack(this.attackingVillage, defendingVillage);
 
         // Assert
 
@@ -65,7 +63,7 @@ public class AttackVillageTest {
         attackingVillageUnits.setUnit(new Axe());
         attackingVillageUnits.setAmount(amountAttackingUnit);
 
-        defendingVillage.add(attackingVillageUnits);
+        attackingVillage.add(attackingVillageUnits);
 
         int amountDefendingUnit = 50;
         Village attackingVillage = new Village(); // village with no unit
@@ -74,7 +72,7 @@ public class AttackVillageTest {
 
         // Act
         AttackingConditionsNotMetException thrown = assertThrows(AttackingConditionsNotMetException.class,
-                () -> this.combatService.checkHasEnoughUnitsToAttack(this.defendingVillage, attackingVillage)
+                () -> this.combatService.checkHasEnoughUnitsToAttack(this.attackingVillage, attackingVillage)
         );
 
         // Assert
@@ -91,12 +89,12 @@ public class AttackVillageTest {
         attackingSpears.setUnit(new Axe());
         attackingSpears.setAmount(amountAttackingUnit);
 
-        defendingVillage.add(attackingSpears);
+        attackingVillage.add(attackingSpears);
 
         attackingSpears.setUnit(new Bow());
         attackingSpears.setAmount(amountAttackingUnit);
 
-        defendingVillage.add(attackingSpears);
+        attackingVillage.add(attackingSpears);
 
         int amountDefendingUnit = 50;
         Village attackingVillage = new Village(); // village with no unit
@@ -105,7 +103,7 @@ public class AttackVillageTest {
 
         // Act
         AttackingConditionsNotMetException thrown = assertThrows(AttackingConditionsNotMetException.class,
-                () -> this.combatService.checkHasEnoughUnitsToAttack(this.defendingVillage, attackingVillage)
+                () -> this.combatService.checkHasEnoughUnitsToAttack(this.attackingVillage, attackingVillage)
         );
 
         // Assert
