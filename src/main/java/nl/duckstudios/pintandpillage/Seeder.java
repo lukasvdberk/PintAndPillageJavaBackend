@@ -50,7 +50,7 @@ public class Seeder {
 
     public void seedUser() {
         User user = new User();
-        user.setEmail("test5@mail.com");
+            user.setEmail("test5@mail.com");
         user.setUsername("Derp");
         user.setPassword(new BCryptPasswordEncoder().encode("Test123!"));
         userDAO.save(user);
