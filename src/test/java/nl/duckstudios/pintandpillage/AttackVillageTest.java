@@ -261,4 +261,101 @@ public class AttackVillageTest {
                 .hasMessageContaining("To attack you need to send at least one unit");
     }
 
+    @Test
+    void should_NotBeAbleToAttack_YouBarelyHaveEnoughUnits() {
+        // Arrange
+        VillageUnit attackingVillageUnits = new VillageUnit();
+
+        int amountAttackingUnit = 51;
+        attackingVillageUnits.setUnit(new Axe());
+        attackingVillageUnits.setAmount(amountAttackingUnit);
+
+        attackingVillage.add(attackingVillageUnits);
+
+        int amountDefendingUnit = 50;
+        Village defendingVillage = new Village();
+        defendingVillage.addUnit(new Axe(), amountDefendingUnit);
+
+
+        // Act
+        // Assert
+        AttackingConditionsNotMetException thrown = assertThrows(AttackingConditionsNotMetException.class,
+                () -> this.combatService.checkHasEnoughUnitsToAttack(this.attackingVillage, defendingVillage)
+        );
+    }
+
+    @Test
+    void should_NotBeAbleToAttack_WithNegativeUnits() {
+        // Arrange
+        VillageUnit attackingVillageUnits = new VillageUnit();
+
+        int amountAttackingUnit = -1;
+        attackingVillageUnits.setUnit(new Axe());
+        attackingVillageUnits.setAmount(amountAttackingUnit);
+
+        attackingVillage.add(attackingVillageUnits);
+
+        int amountDefendingUnit = 50;
+        Village defendingVillage = new Village();
+        defendingVillage.addUnit(new Axe(), amountDefendingUnit);
+
+
+        // Act
+        // Assert
+        AttackingConditionsNotMetException thrown = assertThrows(AttackingConditionsNotMetException.class,
+                () -> this.combatService.checkHasEnoughUnitsToAttack(this.attackingVillage, defendingVillage)
+        );
+    }
+
+    @Test
+    void should_NotBeAbleToAttack_WithTheSameAmountOfUnits() {
+        // Arrange
+        VillageUnit attackingVillageUnits = new VillageUnit();
+
+        int amountAttackingUnit = 50;
+        attackingVillageUnits.setUnit(new Axe());
+        attackingVillageUnits.setAmount(amountAttackingUnit);
+
+        attackingVillage.add(attackingVillageUnits);
+
+        int amountDefendingUnit = 50;
+        Village defendingVillage = new Village();
+        defendingVillage.addUnit(new Axe(), amountDefendingUnit);
+
+
+        // Act
+        // Assert
+        AttackingConditionsNotMetException thrown = assertThrows(AttackingConditionsNotMetException.class,
+                () -> this.combatService.checkHasEnoughUnitsToAttack(this.attackingVillage, defendingVillage)
+        );
+    }
+
+    @Test
+    void should_NotBeAbleToAttack_ShouldBeAbleToAttackWith1MoreUnit() {
+        // Arrange
+        VillageUnit attackingVillageUnits = new VillageUnit();
+
+        int amountAttackingUnit = 51;
+        attackingVillageUnits.setUnit(new Axe());
+        attackingVillageUnits.setAmount(amountAttackingUnit);
+
+        VillageUnit attackingVillageShips = new VillageUnit();
+        attackingVillageShips.setUnit(new TransportShip());
+        attackingVillageShips.setAmount(2);
+
+        attackingVillage.add(attackingVillageUnits);
+        attackingVillage.add(attackingVillageShips);
+
+        int amountDefendingUnit = 50;
+        Village defendingVillage = new Village();
+        defendingVillage.addUnit(new Axe(), amountDefendingUnit);
+
+
+        // Act
+        this.combatService.checkHasEnoughShipsToSendUnits(attackingVillage);
+
+        // Assert
+
+        // nothing to assert. The test passes if the act function does not throw an exception
+     }
 }
