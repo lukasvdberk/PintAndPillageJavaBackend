@@ -2,10 +2,8 @@ package nl.duckstudios.pintandpillage;
 
 import nl.duckstudios.pintandpillage.entity.Coord;
 import nl.duckstudios.pintandpillage.entity.Village;
-import nl.duckstudios.pintandpillage.entity.buildings.Lumberyard;
 import nl.duckstudios.pintandpillage.entity.buildings.ResourceBuilding;
 import nl.duckstudios.pintandpillage.mocks.MockedResourceBuilding;
-import nl.duckstudios.pintandpillage.model.ResourceType;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +25,7 @@ public class ResourcesBuildingTest {
 
     public MockedResourceBuilding mockedResourceBuildingUnderTesting;
 
-    private MockedResourceBuilding setupMockedResourceBuilding(Coord coord) {
+    private MockedResourceBuilding setupMockedResourceBuildingUnderTesting(Coord coord) {
         MockedResourceBuilding resourceBuilding = new MockedResourceBuilding();
         resourceBuilding.setVillage(villageMock);
         resourceBuilding.setLevel(1);
@@ -39,19 +37,19 @@ public class ResourcesBuildingTest {
         return resourceBuilding;
     }
 
-    void setupLumberYardUnderTesting(){
+    void setupMockedResourceBuildingUnderTesting(){
         this.villageMock = new Village();
 
         // so when we want to collect resources we are not limited
         int storageLimit = 1000000000;
         this.villageMock.setResourceLimit(storageLimit);
 
-        this.mockedResourceBuildingUnderTesting = this.setupMockedResourceBuilding(new Coord(1, 4));
+        this.mockedResourceBuildingUnderTesting = this.setupMockedResourceBuildingUnderTesting(new Coord(1, 4));
     }
 
     @Test
     void should_IncreaseProductionResourceProduction_WhenBuild() {
-        this.setupLumberYardUnderTesting();
+        this.setupMockedResourceBuildingUnderTesting();
         // Arrange
         int expectedResourcesPerHour = 532; // 500 extra because that is the starting value
 
@@ -72,7 +70,7 @@ public class ResourcesBuildingTest {
     @Test
     void should_IncreaseProductionResourceProduction_WhenWaitingMultipleHours() {
         // Arrange
-        this.setupLumberYardUnderTesting();
+        this.setupMockedResourceBuildingUnderTesting();
         int expectedResourcesPerHour = 596; // 500 extra because that is the starting value
 
         // Act
@@ -92,7 +90,7 @@ public class ResourcesBuildingTest {
     @Test
     void should_IncreaseProductionWoodProduction_WhenWaitingMultipleHoursWithHigherLevel() {
         // Arrange
-        this.setupLumberYardUnderTesting();
+        this.setupMockedResourceBuildingUnderTesting();
 
         int buildingLevel = 10;
         this.mockedResourceBuildingUnderTesting.setLevel(buildingLevel); // upgrade to level 10
@@ -117,12 +115,12 @@ public class ResourcesBuildingTest {
     @Test
     void should_IncreaseProductionWoodProduction_WithMultipleLumberyards() {
         // Arrange
-        this.setupLumberYardUnderTesting();
+        this.setupMockedResourceBuildingUnderTesting();
         int expectedResourcesPerHour = 788; // 500 extra because that is the starting value
 
         // setup 2 more lumberyards to increase production
-        ResourceBuilding secondMockedResourceBuilding = this.setupMockedResourceBuilding(new Coord(2, 2));
-        ResourceBuilding thirdMockedResourceBuilding = this.setupMockedResourceBuilding(new Coord(9, 4));
+        ResourceBuilding secondMockedResourceBuilding = this.setupMockedResourceBuildingUnderTesting(new Coord(2, 2));
+        ResourceBuilding thirdMockedResourceBuilding = this.setupMockedResourceBuildingUnderTesting(new Coord(9, 4));
 
         // Act
 
