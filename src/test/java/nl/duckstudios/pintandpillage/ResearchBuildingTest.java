@@ -1,10 +1,7 @@
 package nl.duckstudios.pintandpillage;
 
-import nl.duckstudios.pintandpillage.Exceptions.BuildingConditionsNotMetException;
 import nl.duckstudios.pintandpillage.Exceptions.ResearchConditionsNotMetException;
 import nl.duckstudios.pintandpillage.entity.Village;
-import nl.duckstudios.pintandpillage.entity.buildings.ResearchBuilding;
-import nl.duckstudios.pintandpillage.entity.buildings.ResourceBuilding;
 import nl.duckstudios.pintandpillage.entity.buildings.Smith;
 import nl.duckstudios.pintandpillage.entity.researching.Research;
 import nl.duckstudios.pintandpillage.mocks.MockedResearch;
@@ -15,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.io.ResourceEditor;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -23,13 +19,14 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 // Story: De smederij upgraden zodat deze research kan doen naar betere krijgers en schepen.
 @ExtendWith(MockitoExtension.class)
 @Tag("SmithResearchBuildingTest")
-public class SmithResearchBuildingTest {
-    Smith smithBuildingUnderTesting;
+public class ResearchBuildingTest {
+    Smith researchBuildingUnderTesting;
 
     MockedResearch researchToTestWith;
 
@@ -50,8 +47,8 @@ public class SmithResearchBuildingTest {
     void setupResearchBuildingUnderTesting() {
         this.villageMock = new Village();
 
-        this.smithBuildingUnderTesting = new Smith();
-        this.smithBuildingUnderTesting.setVillage(this.villageMock);
+        this.researchBuildingUnderTesting = new Smith();
+        this.researchBuildingUnderTesting.setVillage(this.villageMock);
 
         this.researchToTestWith = this.createDefaultResearch(0);
     }
@@ -59,7 +56,7 @@ public class SmithResearchBuildingTest {
     @Test
     void should_NotBeAbleToStartResearch_WhenResearchInProcess() {
         // Arrange
-        this.smithBuildingUnderTesting.startResearch(this.researchToTestWith);
+        this.researchBuildingUnderTesting.startResearch(this.researchToTestWith);
 
         // Act
 
@@ -67,16 +64,16 @@ public class SmithResearchBuildingTest {
         int setResearchLevel = 0; // so we don't get a error about that
         MockedResearch newResearch = this.createDefaultResearch(setResearchLevel);
         ResearchConditionsNotMetException thrown = assertThrows(ResearchConditionsNotMetException.class,
-                () -> this.smithBuildingUnderTesting.startResearch(newResearch)
+                () -> this.researchBuildingUnderTesting.startResearch(newResearch)
         );
 
         // Assert
         Research expectedResearch = this.researchToTestWith;
-        Research actualActiveResearch = this.smithBuildingUnderTesting.getCurrentResearch();
+        Research actualActiveResearch = this.researchBuildingUnderTesting.getCurrentResearch();
 
         assertThat(thrown.getMessage(), is("A research is already in progress"));
         assertThat(actualActiveResearch, is(expectedResearch));
-        assertTrue(this.smithBuildingUnderTesting.isResearchInProgress());
+        assertTrue(this.researchBuildingUnderTesting.isResearchInProgress());
     }
 
     @Test
@@ -87,9 +84,9 @@ public class SmithResearchBuildingTest {
         MockedResearch researchUnderTesting = this.createDefaultResearch(requiredLevel);
 
         int smithBuildingLevel = 1;
-        this.smithBuildingUnderTesting.setLevel(smithBuildingLevel);
+        this.researchBuildingUnderTesting.setLevel(smithBuildingLevel);
         ResearchConditionsNotMetException thrown = assertThrows(ResearchConditionsNotMetException.class,
-                () -> this.smithBuildingUnderTesting.startResearch(researchUnderTesting)
+                () -> this.researchBuildingUnderTesting.startResearch(researchUnderTesting)
         );
 
         // Assert
@@ -99,14 +96,14 @@ public class SmithResearchBuildingTest {
     @Test
     void should_SetResearchEqualToCurrentResearch_WhenStartResearch() {
         // Act
-        this.smithBuildingUnderTesting.startResearch(this.researchToTestWith);
+        this.researchBuildingUnderTesting.startResearch(this.researchToTestWith);
 
         // Assert
         Research expectedResearch = this.researchToTestWith;
-        Research actualActiveResearch = this.smithBuildingUnderTesting.getCurrentResearch();
+        Research actualActiveResearch = this.researchBuildingUnderTesting.getCurrentResearch();
 
         assertThat(actualActiveResearch, is(expectedResearch));
-        assertTrue(this.smithBuildingUnderTesting.isResearchInProgress());
+        assertTrue(this.researchBuildingUnderTesting.isResearchInProgress());
     }
 
     @Test
@@ -115,13 +112,13 @@ public class SmithResearchBuildingTest {
         LocalDateTime expectedTimeToBuild = LocalDateTime.now().plusSeconds(baseSecondsToResearch);
 
         // Act
-        this.smithBuildingUnderTesting.startResearch(this.researchToTestWith);
+        this.researchBuildingUnderTesting.startResearch(this.researchToTestWith);
 
         // Assert
-        LocalDateTime actualTimeLeftToBuild = this.smithBuildingUnderTesting.getCurrentResearchFinishTime();
+        LocalDateTime actualTimeLeftToBuild = this.researchBuildingUnderTesting.getCurrentResearchFinishTime();
 
         assertThat(actualTimeLeftToBuild, is(expectedTimeToBuild));
-        assertTrue(this.smithBuildingUnderTesting.isResearchInProgress());
+        assertTrue(this.researchBuildingUnderTesting.isResearchInProgress());
     }
 
 
@@ -133,9 +130,39 @@ public class SmithResearchBuildingTest {
         int expectedBeerLeftAfterResearch = 400;
 
         // Act
-        this.smithBuildingUnderTesting.startResearch(this.researchToTestWith);
+        this.researchBuildingUnderTesting.startResearch(this.researchToTestWith);
 
         // Assert
+        Map<String, Integer> actualResources = this.villageMock.getVillageResources();
+        int actualWoodResourcesLeft = actualResources.get(ResourceType.Wood.name());
+        int actualStoneResourcesLeft = actualResources.get(ResourceType.Stone.name());
+        int actualBeerResourcesLeft = actualResources.get(ResourceType.Beer.name());
+
+        assertThat(actualWoodResourcesLeft, is(expectedWoodLeftAfterResearch));
+        assertThat(actualStoneResourcesLeft, is(expectedStoneLeftAfterResearch));
+        assertThat(actualBeerResourcesLeft, is(expectedBeerLeftAfterResearch));
+    }
+
+    @Test
+    void should_NotSubtractResources_WhenResearchNotStarted() {
+        // Arrange
+        int expectedWoodLeftAfterResearch = 500;
+        int expectedStoneLeftAfterResearch = 500;
+        int expectedBeerLeftAfterResearch = 500;
+
+        // Act
+        MockedResearch researchUnderTesting = new MockedResearch(baseSecondsToResearch, 0, 800, 800, 800);
+
+        // Assert
+        ResearchConditionsNotMetException thrown = assertThrows(ResearchConditionsNotMetException.class,
+                () -> this.researchBuildingUnderTesting.startResearch(researchUnderTesting)
+        );
+
+        // Assert
+        assertThat(thrown.getMessage(), is("Not enough resources available"));
+
+
+        // assert that you still have all your resources
         Map<String, Integer> actualResources = this.villageMock.getVillageResources();
         int actualWoodResourcesLeft = actualResources.get(ResourceType.Wood.name());
         int actualStoneResourcesLeft = actualResources.get(ResourceType.Stone.name());

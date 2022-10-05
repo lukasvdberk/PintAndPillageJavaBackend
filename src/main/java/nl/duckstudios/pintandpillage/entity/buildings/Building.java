@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import nl.duckstudios.pintandpillage.Exceptions.BuildingConditionsNotMetException;
+import nl.duckstudios.pintandpillage.GodMode;
 import nl.duckstudios.pintandpillage.entity.Coord;
 import nl.duckstudios.pintandpillage.entity.Village;
 import nl.duckstudios.pintandpillage.helper.ResourceManager;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -85,13 +87,16 @@ public abstract class Building {
     @Getter
     private int points;
 
+//    @Value("${godMode.enabled}")
+    private boolean isGodMode = GodMode.hasGodMode();
+
     public Building() {
         this.populationRequiredNextLevel = this.getPopulationRequired(1);
         this.resourceManager = new ResourceManager();
     }
 
     public void setConstructionTime() {
-        this.constructionTime = LocalTime.of(0, 0, 0).plusSeconds(this.constructionTimeSeconds);
+        this.constructionTime = this.isGodMode ? LocalTime.now().minusSeconds(1) : LocalTime.of(0, 0, 0).plusSeconds(this.constructionTimeSeconds);
     }
 
     public LocalTime getConstructionTimeLeft() {
@@ -107,7 +112,7 @@ public abstract class Building {
     }
 
     public void setConstructionTimeSeconds(long seconds) {
-        this.constructionTimeSeconds = seconds;
+        this.constructionTimeSeconds = this.isGodMode ? 0 : seconds;
         this.setConstructionTime();
     }
 

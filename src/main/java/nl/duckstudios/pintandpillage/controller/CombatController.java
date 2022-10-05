@@ -1,6 +1,7 @@
 package nl.duckstudios.pintandpillage.controller;
 
 import nl.duckstudios.pintandpillage.Exceptions.AttackingConditionsNotMetException;
+import nl.duckstudios.pintandpillage.GodMode;
 import nl.duckstudios.pintandpillage.dao.TravelDao;
 import nl.duckstudios.pintandpillage.entity.Coord;
 import nl.duckstudios.pintandpillage.entity.User;
@@ -69,8 +70,8 @@ public class CombatController {
         int slowestUnitSpeed = attackingUnits.stream().mapToInt(a -> a.getUnit().getSpeed()).min().orElse(-1);
         int distanceBetweenVillages = this.distanceService.calculateDistance(new Coord(attackingVillage.getPositionX(), attackingVillage.getPositionY()),
                 new Coord(defendingVillage.getPositionX(), defendingVillage.getPositionY()));
-
-        long travelTimeSeconds = (long) distanceBetweenVillages * (1000 / slowestUnitSpeed);
+        boolean hasGodMode = GodMode.hasGodMode();
+        long travelTimeSeconds = hasGodMode ? 3 : (long) distanceBetweenVillages * (1000 / slowestUnitSpeed);
         LocalTime travelTime = LocalTime.of(0, 0, 0).plusSeconds(travelTimeSeconds);
 
         AttackCombatTravel travel = new AttackCombatTravel();

@@ -11,8 +11,4 @@ public class MockBuilding extends Building
     public void updateBuilding() {
         super.setConstructionTimeSeconds(10);
     }
-
-    public void setResourceManager(ResourceManager resourceManager){
-        super.resourceManager = resourceManager;
-    }
 }

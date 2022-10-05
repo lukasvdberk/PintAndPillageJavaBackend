@@ -6,10 +6,7 @@ import nl.duckstudios.pintandpillage.dao.VillageDataMapper;
 import nl.duckstudios.pintandpillage.entity.Coord;
 import nl.duckstudios.pintandpillage.entity.User;
 import nl.duckstudios.pintandpillage.entity.Village;
-import nl.duckstudios.pintandpillage.entity.buildings.Barracks;
-import nl.duckstudios.pintandpillage.entity.buildings.Harbor;
-import nl.duckstudios.pintandpillage.entity.buildings.House;
-import nl.duckstudios.pintandpillage.entity.buildings.Smith;
+import nl.duckstudios.pintandpillage.entity.buildings.*;
 import nl.duckstudios.pintandpillage.entity.production.Spear;
 import nl.duckstudios.pintandpillage.entity.production.TransportShip;
 import nl.duckstudios.pintandpillage.helper.VillageFactory;
@@ -60,11 +57,19 @@ public class Seeder {
         user2.setUsername("DerpTheBetterDerp");
         user2.setPassword(new BCryptPasswordEncoder().encode("Test123!"));
         userDAO.save(user2);
+
+        User user3 = new User();
+        user3.setEmail("test7@mail.com");
+        user3.setUsername("DerpieDerp;");
+        user3.setPassword(new BCryptPasswordEncoder().encode("Test123!"));
+        userDAO.save(user3);
     }
 
     public void seedVillage() {
         Optional<User> user = this.userDAO.findByEmail("test5@mail.com");
         Optional<User> user2 = this.userDAO.findByEmail("test6@mail.com");
+        Optional<User> user3 = this.userDAO.findByEmail("test7@mail.com");
+
 
         if (user2.isPresent()) {
             Village village2 = this.villageFactory.createBasicVillage(user2.get(), new Coord(20, 15));
@@ -87,10 +92,19 @@ public class Seeder {
             harbor.setUnderConstruction(false);
 
             House house = new House();
-            house.setLevel(20);
+            house.setLevel(500000);
             house.setVillage(village2);
             house.setPosition(new Coord(1, 4));
             house.setUnderConstruction(false);
+
+
+            Storage storageBuilding = new Storage();
+            storageBuilding.setPosition(new Coord(9, 7));
+            storageBuilding.setLevel(50);
+            storageBuilding.setVillage(village2);
+            storageBuilding.setUnderConstruction(false);
+            village2.createBuilding(storageBuilding);
+
             village2.setVillageResources(new HashMap<>() {
                 {
                     put(ResourceType.Stone.name(), 10000);
@@ -149,7 +163,6 @@ public class Seeder {
                 }
             });
 
-
             village.createBuilding(barracks);
             village.createBuilding(smith);
             village.createBuilding(harbor);
@@ -161,6 +174,35 @@ public class Seeder {
 
             village.addUnit(spearUnit, 10);
             village.addUnit(transportShip, 1);
+
+            this.villageDAO.save(village);
+        }
+
+        if(user3.isPresent()) {
+            Village village = this.villageFactory.createBasicVillage(user3.get(), new Coord(15, 30));
+
+            House house = new House();
+            house.setLevel(9);
+            house.setVillage(village);
+            house.setPosition(new Coord(1, 4));
+            house.setUnderConstruction(false);
+
+            House house2 = new House();
+            house2.setLevel(11);
+            house2.setVillage(village);
+            house2.setPosition(new Coord(2, 4));
+            house2.setUnderConstruction(false);
+            village.setVillageResources(new HashMap<>() {
+                {
+                    put(ResourceType.Stone.name(), 10000000);
+                    put(ResourceType.Wood.name(), 10000000);
+                    put(ResourceType.Beer.name(), 10000000);
+                    put(ResourceType.Hop.name(), 10000000);
+                }
+            });
+
+            village.createBuilding(house);
+            village.createBuilding(house2);
 
             this.villageDAO.save(village);
         }
