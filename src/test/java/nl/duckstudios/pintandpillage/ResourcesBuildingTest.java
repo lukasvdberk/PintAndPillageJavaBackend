@@ -113,7 +113,7 @@ public class ResourcesBuildingTest {
     }
 
     @Test
-    void should_IncreaseProductionWoodProduction_WithMultipleLumberyards() {
+    void should_IncreaseProductionWoodProduction_WithResourceBuildings() {
         // Arrange
         this.setupMockedResourceBuildingUnderTesting();
         int expectedResourcesPerHour = 788; // 500 extra because that is the starting value
@@ -143,7 +143,7 @@ public class ResourcesBuildingTest {
     }
 
     @Test
-    void should_NotIncreaseWoodProduction_WhenNotBuild() {
+    void should_NotIncreaseProduction_WhenNotBuild() {
         this.villageMock = new Village();
         int expectedResourcesPerHour = 500; // default wood
 
